@@ -1,0 +1,10 @@
+config-local.json
+config-server.json
+__pycache__/
+*.pyc
+.vscode/
+*.swp
+.idea/
+.DS_Store
+runtime/
+etc/
