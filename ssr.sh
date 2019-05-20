@@ -68,10 +68,16 @@ start(){
      fi
      case $(uname) in
          Darwin)
-             launchctl unload -w "$home/Library/LaunchAgents/${name%.json}.plist"
+             plistFile="$home/Library/LaunchAgents/${name%.json}.plist"
+             if [ -e "$plistFile" ];then
+                 launchctl unload -w "$plistFile"
+             fi
              ;;
          Linux)
-             systemctl stop ${name%.json}
+             serviceFile="/etc/systemd/system/${name%.json}.service"
+             if [ -e "$serviceFile" ];then
+                 systemctl stop "$serviceFile"
+             fi
              ;;
      esac
  }
