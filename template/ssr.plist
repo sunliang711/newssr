@@ -6,7 +6,7 @@
     <string>NAME</string>
     <key>ProgramArguments</key>
     <array>
-        <string>python</string>
+        <string>PYTHON</string>
         <string>ROOT/ssr/EXE.py</string>
         <string>-c</string>
         <string>ROOT/etc/CONFIG</string>

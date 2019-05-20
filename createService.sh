@@ -37,12 +37,14 @@ case $(uname) in
     Darwin)
         sed -e "s|NAME|${name%.json}|g" -e "s|ROOT|$root|g" \
             -e "s|EXE|$exe|g" -e "s|CONFIG|$name|g" \
+            -e "s|PYTHON|$(which python)|g" \
             template/ssr.plist > runtime/${name%.json}.plist
         ln -sf "$root/runtime/${name%.json}.plist" $home/Library/LaunchAgents
         ;;
     Linux)
         sed -e "s|NAME|${name%.json}|g" -e "s|ROOT|$root|g" \
             -e "s|EXE|$exe|g" -e "s|CONFIG|$name|g" \
+            -e "s|PYTHON|$(which python)|g" \
             template/ssr.service > runtime/${name%.json}.service
         sudo ln -sf "$root/runtime/${name%.json}.service" /etc/systemd/system
         ;;

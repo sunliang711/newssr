@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=python ROOT/ssr/EXE.py -c ROOT/etc/CONFIG -v
+ExecStart=PYTHON ROOT/ssr/EXE.py -c ROOT/etc/CONFIG -v
 
 [Install]
 WantedBy=multi-user.target
