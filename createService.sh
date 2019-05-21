@@ -47,5 +47,6 @@ case $(uname) in
             -e "s|PYTHON|$(which python)|g" \
             template/ssr.service > runtime/${name%.json}.service
         sudo ln -sf "$root/runtime/${name%.json}.service" /etc/systemd/system
+        sudo systemctl daemon-reload
         ;;
 esac
