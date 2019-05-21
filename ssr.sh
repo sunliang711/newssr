@@ -76,7 +76,7 @@ start(){
          Linux)
              serviceFile="/etc/systemd/system/${name%.json}.service"
              if [ -e "$serviceFile" ];then
-                 systemctl stop "$serviceFile"
+                 systemctl stop "${name%.json}"
              fi
              ;;
      esac
