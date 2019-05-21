@@ -23,8 +23,9 @@ usage(){
 	    status      <config file>
 	    log         <config file>
 	    config      <config file>
-	    add         <new config name> [type:client(default) or server]
+	    add         <new config name>
 	    delete      <config file>
+	    addServer   <new config name>
 	    em
 	EOF
  }
@@ -64,6 +65,8 @@ start(){
      fi
      if [ ! -e "etc/${name%.json}.json" ];then
          echo "No such config file: \"${RED}${name%.json}.json${RESET}\" in $root/etc"
+         echo "Available config file(s):"
+         list
          exit 1
      fi
      case $(uname) in
@@ -92,6 +95,8 @@ start(){
      name=${1:?'missing config file'}
      if [ ! -e "etc/${name%.json}.json" ];then
          echo "No such config file: \"${RED}${name%.json}.json${RESET}\" in $root/etc"
+         echo "Available config file(s):"
+         list
          exit 1
      fi
      case $(uname) in
@@ -109,6 +114,8 @@ log(){
     name=${1:?'missing config file'}
     if [ ! -e "etc/${name%.json}.json" ];then
         echo "No such config file: \"${RED}${name%.json}.json${RESET}\" in $root/etc"
+        echo "Available config file(s):"
+        list
         exit 1
     fi
     case $(uname) in
@@ -127,6 +134,8 @@ config(){
      name=${1:?'missing config file'}
      if [ ! -e "etc/${name%.json}.json" ];then
          echo "No such config file: \"${RED}${name%.json}.json${RESET}\" in $root/etc"
+         echo "Available config file(s):"
+         list
          exit 1
      fi
 
@@ -156,6 +165,7 @@ add(){
          echo "Config file: ${name} already exists"
          exit 1
      fi
+     echo "config file is: ${RED}$name${RESET}"
 
      cp template/${typ}.json etc/$name
  }
@@ -164,6 +174,8 @@ delete(){
     name=${1:?'missing config file'}
     if [ ! -e "etc/${name%.json}.json" ];then
         echo "No such config file: \"${RED}${name%.json}.json${RESET}\" in $root/etc"
+        echo "Available config file(s):"
+        list
         exit 1
     fi
     stop $name
@@ -215,7 +227,7 @@ case  $cmd in
         config "$@"
         ;;
     add)
-        add "$@"
+        add "$1" client
         ;;
     del|delete|rm|remove)
         delete "$@"
@@ -228,6 +240,9 @@ case  $cmd in
         ;;
     list)
         list
+        ;;
+    addServer)
+        add "$1" server
         ;;
     *)
         usage
