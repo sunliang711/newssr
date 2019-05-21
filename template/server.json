@@ -9,17 +9,17 @@
         "8002":"8002"
     },
 
-
     "method": "chacha20",
-
     "protocol": "auth_aes128_sha1",
     "protocol_param": "",
-
     "obfs": "tls1.2_ticket_auth_compatible",
     "obfs_param": "",
 
-
-
+    "1method": "chacha20",
+    "1protocol": "origin",
+    "1protocol_param": "",
+    "1obfs": "plain",
+    "1obfs_param": "",
 
     "server_ipv6": "::",
 

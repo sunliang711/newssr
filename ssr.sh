@@ -31,7 +31,13 @@ usage(){
  }
 
 start(){
-     name=${1:?'missing config file'}
+     name=${1}
+     if [ -z "$name" ];then
+        echo "Missing config file."
+        echo "Available file(s):"
+        list
+        exit 1
+     fi
      if echo $name | grep -q '^S';then
          typ=server
      elif echo $name | grep -q "^C";then
@@ -54,7 +60,13 @@ start(){
  }
 
  stop(){
-     name=${1:?'missing config file'}
+     name=${1}
+     if [ -z "$name" ];then
+        echo "Missing config file."
+        echo "Available file(s):"
+        list
+        exit 1
+     fi
      if echo $name | grep -q '^S';then
          typ=server
      elif echo $name | grep -q "^C";then
@@ -86,13 +98,25 @@ start(){
  }
 
  restart(){
-     name=${1:?'missing config file'}
+     name=${1}
+     if [ -z "$name" ];then
+        echo "Missing config file."
+        echo "Available file(s):"
+        list
+        exit 1
+     fi
      stop $name
      start $name
  }
 
  status(){
-     name=${1:?'missing config file'}
+     name=${1}
+     if [ -z "$name" ];then
+        echo "Missing config file."
+        echo "Available file(s):"
+        list
+        exit 1
+     fi
      if [ ! -e "etc/${name%.json}.json" ];then
          echo "No such config file: \"${RED}${name%.json}.json${RESET}\" in $root/etc"
          echo "Available config file(s):"
@@ -111,7 +135,13 @@ start(){
  }
 
 log(){
-    name=${1:?'missing config file'}
+    name=${1}
+    if [ -z "$name" ];then
+       echo "Missing config file."
+       echo "Available file(s):"
+       list
+       exit 1
+    fi
     if [ ! -e "etc/${name%.json}.json" ];then
         echo "No such config file: \"${RED}${name%.json}.json${RESET}\" in $root/etc"
         echo "Available config file(s):"
@@ -131,7 +161,13 @@ log(){
 }
 
 config(){
-     name=${1:?'missing config file'}
+     name=${1}
+     if [ -z "$name" ];then
+        echo "Missing config file."
+        echo "Available file(s):"
+        list
+        exit 1
+     fi
      if [ ! -e "etc/${name%.json}.json" ];then
          echo "No such config file: \"${RED}${name%.json}.json${RESET}\" in $root/etc"
          echo "Available config file(s):"
@@ -171,7 +207,13 @@ add(){
  }
 
 delete(){
-    name=${1:?'missing config file'}
+    name=${1}
+    if [ -z "$name" ];then
+       echo "Missing config file."
+       echo "Available file(s):"
+       list
+       exit 1
+    fi
     if [ ! -e "etc/${name%.json}.json" ];then
         echo "No such config file: \"${RED}${name%.json}.json${RESET}\" in $root/etc"
         echo "Available config file(s):"
