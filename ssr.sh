@@ -274,9 +274,6 @@ case  $cmd in
     del|delete|rm|remove)
         delete "$@"
         ;;
-    addServer)
-        addServer "$@"
-        ;;
     em)
         em
         ;;
