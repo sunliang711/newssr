@@ -9,8 +9,12 @@ cd "$root"
 user=${SUDO_USER:-$(whoami)}
 home=$(eval echo ~$user)
 
-RED=$(tput setaf 1)
-RESET=$(tput sgr 0)
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+blue=$(tput setaf 4)
+cyan=$(tput setaf 5)
+reset=$(tput sgr0)
 
 usage(){
      cat<<-EOF
@@ -34,6 +38,7 @@ start(){
      name=${1}
      if [ -z "$name" ];then
         echo "Missing config file."
+        echo
         echo "Available file(s):"
         list
         exit 1
@@ -63,6 +68,7 @@ start(){
      name=${1}
      if [ -z "$name" ];then
         echo "Missing config file."
+        echo
         echo "Available file(s):"
         list
         exit 1
@@ -76,7 +82,8 @@ start(){
          exit 1
      fi
      if [ ! -e "etc/${name%.json}.json" ];then
-         echo "No such config file: \"${RED}${name%.json}.json${RESET}\" in $root/etc"
+         echo "No such config file: \"${red}${name%.json}.json${reset}\" in $root/etc"
+         echo
          echo "Available config file(s):"
          list
          exit 1
@@ -101,6 +108,7 @@ start(){
      name=${1}
      if [ -z "$name" ];then
         echo "Missing config file."
+        echo
         echo "Available file(s):"
         list
         exit 1
@@ -113,12 +121,14 @@ start(){
      name=${1}
      if [ -z "$name" ];then
         echo "Missing config file."
+        echo
         echo "Available file(s):"
         list
         exit 1
      fi
      if [ ! -e "etc/${name%.json}.json" ];then
-         echo "No such config file: \"${RED}${name%.json}.json${RESET}\" in $root/etc"
+         echo "No such config file: \"${red}${name%.json}.json${reset}\" in $root/etc"
+         echo
          echo "Available config file(s):"
          list
          exit 1
@@ -138,12 +148,14 @@ log(){
     name=${1}
     if [ -z "$name" ];then
        echo "Missing config file."
+       echo
        echo "Available file(s):"
        list
        exit 1
     fi
     if [ ! -e "etc/${name%.json}.json" ];then
-        echo "No such config file: \"${RED}${name%.json}.json${RESET}\" in $root/etc"
+        echo "No such config file: \"${red}${name%.json}.json${reset}\" in $root/etc"
+        echo
         echo "Available config file(s):"
         list
         exit 1
@@ -164,12 +176,14 @@ config(){
      name=${1}
      if [ -z "$name" ];then
         echo "Missing config file."
+        echo
         echo "Available file(s):"
         list
         exit 1
      fi
      if [ ! -e "etc/${name%.json}.json" ];then
-         echo "No such config file: \"${RED}${name%.json}.json${RESET}\" in $root/etc"
+         echo "No such config file: \"${red}${name%.json}.json${reset}\" in $root/etc"
+         echo
          echo "Available config file(s):"
          list
          exit 1
@@ -201,7 +215,7 @@ add(){
          echo "Config file: ${name} already exists"
          exit 1
      fi
-     echo "config file is: ${RED}$name${RESET}"
+     echo "config file is: ${red}$name${reset}"
 
      cp template/${typ}.json etc/$name
 
@@ -217,12 +231,14 @@ delete(){
     name=${1}
     if [ -z "$name" ];then
        echo "Missing config file."
+       echo
        echo "Available file(s):"
        list
        exit 1
     fi
     if [ ! -e "etc/${name%.json}.json" ];then
-        echo "No such config file: \"${RED}${name%.json}.json${RESET}\" in $root/etc"
+        echo "No such config file: \"${red}${name%.json}.json${reset}\" in $root/etc"
+        echo
         echo "Available config file(s):"
         list
         exit 1
@@ -248,7 +264,12 @@ list(){
     cd etc
     if ls *.json >/dev/null 2>&1;then
         for i in *.json;do
-            echo $i
+            localPort="$(perl -ne 'print $2 if /(\"local_port\"\s*:\s*)(\d+)/' $i)"
+            if lsof -iTCP -sTCP:LISTEN -P | grep -q "\<${localPort}\>";then
+                printf "%-20s %s\n" $i "${green}working on ${localPort}${reset}"
+            else
+                printf "%-20s %s\n" $i "${cyan}stopped on ${localPort}${reset}"
+            fi
         done
     fi
 }
