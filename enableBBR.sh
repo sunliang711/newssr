@@ -8,17 +8,11 @@ checkKernel(){
     return 1
 }
 
-installKernel(){
-echo NOthing
-}
-
 enableBBR(){
-    #echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
-    #echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
-    cat>/etc/sysctl.d/10-bbr.conf<<EOF
-net.core.default_qdisc=fq
-net.ipv4.tcp_congestion_control=bbr
-EOF
+    cat>/etc/sysctl.d/10-bbr.conf<<-EOF
+		net.core.default_qdisc=fq
+		net.ipv4.tcp_congestion_control=bbr
+	EOF
     sysctl -p
 }
 
@@ -29,11 +23,10 @@ checkBBR(){
     lsmod | grep bbr
 }
 
-if ! checkKernel;then
-    installKernel
-fi
-
 if checkKernel;then
     enableBBR
     checkBBR
+else
+    echo "Error: Linux Kernel must >= 4.9"
+    exit 1
 fi

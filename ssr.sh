@@ -204,6 +204,13 @@ add(){
      echo "config file is: ${RED}$name${RESET}"
 
      cp template/${typ}.json etc/$name
+
+    if [ "$typ" = "server" ] && [ "$uname" = "Linux" ];then
+        echo "Enable bbr? [y/N]" bbr
+        if [[ "$bbr" =~ [yY] ]];then
+            bash enableBBR.sh
+        fi
+    fi
  }
 
 delete(){
