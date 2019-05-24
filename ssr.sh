@@ -264,11 +264,15 @@ list(){
     cd etc
     if ls *.json >/dev/null 2>&1;then
         for i in *.json;do
-            localPort="$(perl -ne 'print $2 if /(\"local_port\"\s*:\s*)(\d+)/' $i)"
-            if lsof -iTCP -sTCP:LISTEN -P | grep -q "\<${localPort}\>";then
-                printf "%-20s %s\n" $i "${green}working on ${localPort}${reset}"
+            if echo $i | grep -q '^C';then
+                localPort="$(perl -ne 'print $2 if /(\"local_port\"\s*:\s*)(\d+)/' $i)"
+                if lsof -iTCP -sTCP:LISTEN -P | grep -q "\<${localPort}\>";then
+                    printf "%-20s %s\n" $i "${green}working on ${localPort}${reset}"
+                else
+                    printf "%-20s %s\n" $i "${cyan}stopped on ${localPort}${reset}"
+                fi
             else
-                printf "%-20s %s\n" $i "${cyan}stopped on ${localPort}${reset}"
+                echo $i
             fi
         done
     fi
