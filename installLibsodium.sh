@@ -17,13 +17,13 @@ runAsRoot(){
     fi
 
     if (($EUID==0));then
-        eval "$cmd"
+        sh -c "$cmd"
     else
         if ! command -v sudo >/dev/null 2>&1;then
             echo "Need sudo cmd"
             exit 1
         fi
-        eval "sudo $cmd"
+        sudo sh -c "$cmd"
     fi
 }
 
@@ -49,6 +49,6 @@ if ! ls /usr/local/lib/libsodium* >/dev/null 2>&1;then
 			ldconfig
 		EOF
 )
-        runAsRoot sh -c "$cmds"
+        runAsRoot "$cmds"
     fi
 fi
