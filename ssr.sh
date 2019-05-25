@@ -15,6 +15,23 @@ yellow=$(tput setaf 3)
 blue=$(tput setaf 4)
 cyan=$(tput setaf 5)
 reset=$(tput sgr0)
+runAsRoot(){
+    cmd="$@"
+    if [ -z "$cmd" ];then
+        echo "${red}Need cmd${reset}"
+        exit 1
+    fi
+
+    if (($EUID==0));then
+        sh -c "$cmd"
+    else
+        if ! command -v sudo >/dev/null 2>&1;then
+            echo "Need sudo cmd"
+            exit 1
+        fi
+        sudo sh -c "$cmd"
+    fi
+}
 
 usage(){
      cat<<-EOF
@@ -193,7 +210,18 @@ config(){
      if command -v vim >/dev/null 2>&1;then
          editor=vim
      fi
-     $editor etc/${name%.json}.json
+     configFile="etc/${name%.json}.json"
+     sha1sum "${configFile}" > "${configFile}.sha1"
+     $editor "${configFile}"
+     if ! sha1sum -c --status "${configFile}.sha1";then
+        echo "${green}Config file: \"$configFile\" changed."
+        echo "Restart service..."
+        stop "$name"
+        start "$name"
+    else
+        echo "${cyan}Config file not changed, do nothing."
+     fi
+     rm "${configFile}.sha1"
  }
 
 add(){
