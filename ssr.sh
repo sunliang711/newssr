@@ -52,7 +52,7 @@ usage(){
  }
 
 start(){
-     name=${1}
+     local name=${1}
      if [ -z "$name" ];then
         echo "Missing config file."
         echo
@@ -98,7 +98,7 @@ start(){
  }
 
  stop(){
-     name=${1}
+     local name=${1}
      if [ -z "$name" ];then
         echo "Missing config file."
         echo
@@ -138,7 +138,7 @@ start(){
  }
 
  restart(){
-     name=${1}
+     local name=${1}
      if [ -z "$name" ];then
         echo "Missing config file."
         echo
@@ -151,7 +151,7 @@ start(){
  }
 
  status(){
-     name=${1}
+     local name=${1}
      if [ -z "$name" ];then
         echo "Missing config file."
         echo
@@ -178,7 +178,7 @@ start(){
  }
 
 log(){
-    name=${1}
+    local name=${1}
     if [ -z "$name" ];then
        echo "Missing config file."
        echo
@@ -206,7 +206,7 @@ log(){
 }
 
 config(){
-     name=${1}
+     local name=${1}
      if [ -z "$name" ];then
         echo "Missing config file."
         echo
@@ -241,7 +241,7 @@ config(){
  }
 
 add(){
-     name=${1:?'missing new config name'}
+     local name=${1:?'missing new config name'}
      typ=${2:-'client'}
      case $typ in
          client)
@@ -272,7 +272,7 @@ add(){
  }
 
 delete(){
-    name=${1}
+    local name=${1}
     if [ -z "$name" ];then
        echo "Missing config file."
        echo
