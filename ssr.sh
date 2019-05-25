@@ -303,6 +303,20 @@ em(){
     fi
     $editor $rpath
 }
+LSOF(){
+    case $(uname) in
+        Linux)
+            if (($EUID!=0));then
+                sudo lsof "$@"
+            else
+                lsof "$@"
+            fi
+            ;;
+        Darwin)
+            lsof "$@"
+            ;;
+    esac
+}
 
 list(){
     cd etc
@@ -310,7 +324,7 @@ list(){
         for i in *.json;do
             if echo $i | grep -q '^C';then
                 localPort="$(perl -ne 'print $2 if /(\"local_port\"\s*:\s*)(\d+)/' $i)"
-                if lsof -iTCP -sTCP:LISTEN -P | grep -q "\<${localPort}\>";then
+                if LSOF -iTCP -sTCP:LISTEN -P | grep -q "\<${localPort}\>";then
                     printf "%-20s %s  " "$i" "${green}working on ${localPort}${reset}"
                     checkPort $localPort
                 else
