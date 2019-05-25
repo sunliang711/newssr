@@ -79,6 +79,22 @@ start(){
              systemctl start ${name%.json}
              ;;
      esac
+     #only check client service
+     if echo "$name" | grep -q "^C";then
+        localPort="$(perl -ne 'print $2 if /(\"local_port\"\s*:\s*)(\d+)/' etc/${name%.json}.json)"
+        checkPort "$localPort"
+     fi
+ }
+
+ checkPort(){
+     port=${1:?'missing port'}
+     echo -n "${yellow}Check Proxy ... "
+     sleep 1
+     if curl -x socks5://localhost:$port google.com >/dev/null 2>&1;then
+            echo "${green}[OK]${reset}"
+        else
+            echo "${blue}[Failed]${reset}"
+     fi
  }
 
  stop(){
@@ -295,9 +311,10 @@ list(){
             if echo $i | grep -q '^C';then
                 localPort="$(perl -ne 'print $2 if /(\"local_port\"\s*:\s*)(\d+)/' $i)"
                 if lsof -iTCP -sTCP:LISTEN -P | grep -q "\<${localPort}\>";then
-                    printf "%-20s %s\n" $i "${green}working on ${localPort}${reset}"
+                    printf "%-20s %s  " "$i" "${green}working on ${localPort}${reset}"
+                    checkPort $localPort
                 else
-                    printf "%-20s %s\n" $i "${cyan}stopped on ${localPort}${reset}"
+                    printf "%-20s %s\n" "$i" "${blue}stopped on ${localPort}${reset}"
                 fi
             else
                 echo $i
