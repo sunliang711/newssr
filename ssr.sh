@@ -227,10 +227,10 @@ config(){
          editor=vim
      fi
      configFile="etc/${name%.json}.json"
-     oldmd5sum="$(python ${configFile})"
+     oldmd5sum="$(python md5.py ${configFile})"
      # sha1sum "${configFile}" > "${configFile}.sha1"
      $editor "${configFile}"
-     newmd5sum="$(python ${configFile})"
+     newmd5sum="$(python md5.py ${configFile})"
      # if ! sha1sum -c --status "${configFile}.sha1";then
      if [ "$oldmd5sum" != "newmd5sum" ];then
         echo "${green}Config file: \"$configFile\" changed."
