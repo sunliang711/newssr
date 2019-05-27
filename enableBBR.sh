@@ -2,7 +2,7 @@
 checkKernel(){
     major=$(uname -r | awk -F. '{print $1}')
     minor=$(uname -r | awk -F. '{print $2}')
-    if (( $major >=4 && $minor >= 9 ));then
+    if (( $major ==4 && $minor >= 9 )) || (( $major > 4));then
         return 0
     fi
     return 1
