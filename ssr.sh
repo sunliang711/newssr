@@ -232,7 +232,7 @@ config(){
      $editor "${configFile}"
      newmd5sum="$(python md5.py ${configFile})"
      # if ! sha1sum -c --status "${configFile}.sha1";then
-     if [ "$oldmd5sum" != "newmd5sum" ];then
+     if [ "$oldmd5sum" != "$newmd5sum" ];then
         echo "${green}Config file: \"$configFile\" changed."
         echo "Restart service..."
         stop "$name"
