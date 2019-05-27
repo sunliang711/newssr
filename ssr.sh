@@ -337,8 +337,7 @@ list(){
                 python $root/getServerPort.py "$i"
                 for port in $(cat "${i}.ports");do
                     if LSOF -iTCP -sTCP:LISTEN -P | grep -q "\<${port}\>";then
-                        printf "%-20s %s  " "$i" "${green}working on ${port}${reset}"
-                        checkPort $port
+                        printf "%-20s %s\n" "$i" "${green}working on ${port}${reset}"
                     else
                         printf "%-20s %s\n" "$i" "${blue}stopped on ${port}${reset}"
                     fi
