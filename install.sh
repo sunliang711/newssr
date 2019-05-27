@@ -17,7 +17,3 @@ if [ ! -d runtime ];then
     mkdir runtime
 fi
 sudo ln -sf $root/ssr.sh /usr/local/bin
-
-if ! command -v sha1sum >/dev/null 2>&1;then
-    echo "Install sha1sum with \"brew install md5sha1sum\" on MacOS."
-fi

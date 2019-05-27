@@ -227,9 +227,12 @@ config(){
          editor=vim
      fi
      configFile="etc/${name%.json}.json"
-     sha1sum "${configFile}" > "${configFile}.sha1"
+     oldmd5sum="$(python ${configFile})"
+     # sha1sum "${configFile}" > "${configFile}.sha1"
      $editor "${configFile}"
-     if ! sha1sum -c --status "${configFile}.sha1";then
+     newmd5sum="$(python ${configFile})"
+     # if ! sha1sum -c --status "${configFile}.sha1";then
+     if [ "$oldmd5sum" != "newmd5sum" ];then
         echo "${green}Config file: \"$configFile\" changed."
         echo "Restart service..."
         stop "$name"
@@ -237,7 +240,7 @@ config(){
     else
         echo "${cyan}Config file not changed, do nothing."
      fi
-     rm "${configFile}.sha1"
+     # rm "${configFile}.sha1"
  }
 
 add(){
