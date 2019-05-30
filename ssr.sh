@@ -76,7 +76,7 @@ start(){
              launchctl load -w "$home/Library/LaunchAgents/${name%.json}.plist"
              ;;
          Linux)
-             systemctl start ${name%.json}
+             runAsRoot systemctl start ${name%.json}
              ;;
      esac
      #only check client service
@@ -131,7 +131,7 @@ start(){
          Linux)
              serviceFile="/etc/systemd/system/${name%.json}.service"
              if [ -e "$serviceFile" ];then
-                 systemctl stop "${name%.json}"
+                runAsRoot systemctl stop "${name%.json}"
              fi
              ;;
      esac
@@ -171,7 +171,7 @@ start(){
              launchctl list | grep ${name%.json}
              ;;
          Linux)
-             systemctl status ${name%.json}
+             runAsRoot systemctl status ${name%.json}
              ;;
      esac
 
@@ -271,6 +271,11 @@ add(){
         if [[ "$bbr" =~ [yY] ]];then
             bash enableBBR.sh
         fi
+    fi
+    echo "Config $name? [y/N]"
+    read edit
+    if [[ "$edit" =~ [yY] ]];then
+        config $name
     fi
  }
 
