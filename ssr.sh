@@ -90,7 +90,7 @@ start(){
      port=${1:?'missing port'}
      echo -n "${yellow}Check Proxy ... "
      sleep 1
-     if curl -x socks5://localhost:$port google.com >/dev/null 2>&1;then
+     if curl -m 5 -x socks5://localhost:$port google.com >/dev/null 2>&1;then
             echo "${green}[OK]${reset}"
         else
             echo "${blue}[Failed]${reset}"
