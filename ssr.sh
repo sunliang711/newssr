@@ -298,6 +298,7 @@ delete(){
     stop $name
 
     rm etc/${name%.json}.json
+    rm etc/${name%.json}.json.md5 2>/dev/null
     rm $home/Library/LaunchAgents/${name%.json}.plist 2>/dev/null
     rm runtime/${name%.json}.plist 2>/dev/null
     rm /etc/systemd/system/${name%.json}.service 2>/dev/null

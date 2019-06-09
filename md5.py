@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+#for python2 use print function
+from __future__ import print_function
 import logging
 import sys
 import hashlib
@@ -25,9 +27,15 @@ def md5hex(filename):
         m.update(chunk)
     return m.hexdigest()
 
+def usage():
+    """Usage: md5.py <input file>"""
+    pass
 
 def main():
-    print(md5hex(sys.argv[1]))
+    if len(sys.argv) < 2:
+        print(usage.__doc__)
+        return 1
+    print(md5hex(sys.argv[1]),end='')
 
 if __name__ == '__main__':
     main()
