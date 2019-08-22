@@ -328,6 +328,7 @@ LSOF(){
 }
 
 list(){
+    check=${1}
     cd etc
     if ls *.json >/dev/null 2>&1;then
         for i in *.json;do
@@ -335,7 +336,7 @@ list(){
                 localPort="$(perl -ne 'print $2 if /(\"local_port\"\s*:\s*)(\d+)/' $i)"
                 if LSOF -iTCP -sTCP:LISTEN -P | grep -q "\<${localPort}\>";then
                     printf "%-20s %s  " "$i" "${green}working on ${localPort}${reset}"
-                    checkPort $localPort
+                    [ -n "$check" ] && checkPort $localPort || printf "\n"
                 else
                     printf "%-20s %s\n" "$i" "${blue}stopped on ${localPort}${reset}"
                 fi
@@ -386,7 +387,7 @@ case  $cmd in
         em
         ;;
     list)
-        list
+        list check
         ;;
     addServer)
         add "$1" server
