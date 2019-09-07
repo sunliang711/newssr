@@ -23,6 +23,11 @@ checkBBR(){
     lsmod | grep bbr
 }
 
+if [ $EUID != 0 ];then
+    echo 'Need root'
+    exit 1
+fi
+
 if checkKernel;then
     enableBBR
     checkBBR
