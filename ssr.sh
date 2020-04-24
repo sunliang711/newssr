@@ -74,9 +74,11 @@ start(){
      case $(uname) in
          Darwin)
              launchctl load -w "$home/Library/LaunchAgents/${name%.json}.plist"
+             echo "Issus tail -f /tmp/${name%.json}.log to check log"
              ;;
          Linux)
              runAsRoot systemctl start ${name%.json}
+             echo "Issus journalctl -u ${name%.json} to check log"
              ;;
      esac
      #only check client service
