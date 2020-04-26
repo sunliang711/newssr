@@ -84,7 +84,13 @@ start(){
      #only check client service
      if echo "$name" | grep -q "^C";then
         localPort="$(perl -ne 'print $2 if /(\"local_port\"\s*:\s*)(\d+)/' etc/${name%.json}.json)"
-        checkPort "$localPort"
+        # checkPort "$localPort"
+        if ps aux | grep 'python' | grep -q "${name%.json}.json" ;then
+            printf "%-20s %s " "${name%.json}.json" "${green}working on ${localPort}${reset}"
+            checkPort $localPort || printf "\n"
+        else
+            printf "%-20s %s\n" "${name%.json}.json" "${blue}stopped on ${localPort}${reset}"
+        fi
      fi
  }
 
@@ -92,7 +98,7 @@ start(){
      port=${1:?'missing port'}
      echo -n "${yellow}Check Proxy ... "
      sleep 1
-     if curl -m 5 -x socks5://localhost:$port google.com >/dev/null 2>&1;then
+     if curl -m 5 -x socks5://localhost:$port ifconfig.me >/dev/null 2>&1;then
             echo "${green}[OK]${reset}"
         else
             echo "${blue}[Failed]${reset}"
@@ -235,10 +241,12 @@ config(){
      newmd5sum="$(python md5.py ${configFile})"
      # if ! sha1sum -c --status "${configFile}.sha1";then
      if [ "$oldmd5sum" != "$newmd5sum" ];then
-        echo "${green}Config file: \"$configFile\" changed."
-        echo "Restart service..."
-        stop "$name"
-        start "$name"
+         if ps aux | grep 'python' | grep -q "${name%.json}.json";then
+             echo "${green}Config file: \"$configFile\" changed."
+             echo "Restart service..."
+             stop "$name"
+             start "$name"
+         fi
     else
         echo "${cyan}Config file not changed, do nothing."
      fi
@@ -336,12 +344,18 @@ list(){
         for i in *.json;do
             if echo $i | grep -q '^C';then
                 localPort="$(perl -ne 'print $2 if /(\"local_port\"\s*:\s*)(\d+)/' $i)"
-                if LSOF -iTCP -sTCP:LISTEN -P | grep -q "\<${localPort}\>";then
-                    printf "%-20s %s  " "$i" "${green}working on ${localPort}${reset}"
+                if ps aux | grep "$i" | grep -q 'python';then
+                    printf "%-20s %s " "$i" "${green}working on ${localPort}${reset}"
                     [ -n "$check" ] && checkPort $localPort || printf "\n"
                 else
                     printf "%-20s %s\n" "$i" "${blue}stopped on ${localPort}${reset}"
                 fi
+                # if LSOF -iTCP -sTCP:LISTEN -P | grep -q "\<${localPort}\>";then
+                #     printf "%-20s %s  " "$i" "${green}working on ${localPort}${reset}"
+                    # [ -n "$check" ] && checkPort $localPort || printf "\n"
+                # else
+                #     printf "%-20s %s\n" "$i" "${blue}stopped on ${localPort}${reset}"
+                # fi
             else
                 python $root/getServerPort.py "$i"
                 for port in $(cat "${i}.ports");do
