@@ -13,7 +13,7 @@
     "obfs": "tls1.2_ticket_auth_compatible",
     "obfs_param": "",
 
-    "1method": "chacha20",
+    "1method": "aes-256-cfb",
     "1protocol": "origin",
     "1protocol_param": "",
     "1obfs": "plain",
